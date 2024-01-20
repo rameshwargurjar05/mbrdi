@@ -3,9 +3,16 @@ import './App.css';
 import LineChart from './Component/LineChart';
 import DriveRoute from './Component/DriveRoute';
 
+interface SeriesEntry {
+  name: string;
+  type: string;
+  stack: string;
+  data: number[];
+}
+
 const chartData = {
   title: {
-    text: 'line chart'
+    // text: 'line chart'
   },
   tooltip: {
     trigger: 'axis',
@@ -17,7 +24,7 @@ const chartData = {
     }
   },
   legend: {
-    data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine']
+    data: ['']
   },
   toolbox: {
     feature: {
@@ -42,62 +49,7 @@ const chartData = {
       type: 'value'
     }
   ],
-  series: [
-    {
-      name: 'Email',
-      type: 'line',
-      stack: 'Total',
-      areaStyle: {},
-      emphasis: {
-        focus: 'series'
-      },
-      data: [120, 132, 101, 134, 90, 230, 210]
-    },
-    {
-      name: 'Union Ads',
-      type: 'line',
-      stack: 'Total',
-      areaStyle: {},
-      emphasis: {
-        focus: 'series'
-      },
-      data: [220, 182, 191, 234, 290, 330, 310]
-    },
-    {
-      name: 'Video Ads',
-      type: 'line',
-      stack: 'Total',
-      areaStyle: {},
-      emphasis: {
-        focus: 'series'
-      },
-      data: [150, 232, 201, 154, 190, 330, 410]
-    },
-    {
-      name: 'Direct',
-      type: 'line',
-      stack: 'Total',
-      areaStyle: {},
-      emphasis: {
-        focus: 'series'
-      },
-      data: [320, 332, 301, 334, 390, 330, 320]
-    },
-    {
-      name: 'Search Engine',
-      type: 'line',
-      stack: 'Total',
-      label: {
-        show: true,
-        position: 'top'
-      },
-      areaStyle: {},
-      emphasis: {
-        focus: 'series'
-      },
-      data: [820, 932, 901, 934, 1290, 1330, 1320]
-    }
-  ],
+  series: [] as SeriesEntry[], // Initialize as an empty array
 
   // Add dataZoom property at the root level
   dataZoom: [
@@ -113,9 +65,22 @@ const chartData = {
       start: 10, // Start percentage of the zoomed area
       end: 100, // End percentage of the zoomed area
     },
-    
   ],
 };
+
+// Generating 100 entries for the series
+for (let i = 0; i < 15; i++) {
+  chartData.series.push({
+    name: `Series ${i + 1}`,
+    type: 'line',
+    stack: 'Total',    
+    data: Array.from({ length: 7 }, () => Math.floor(Math.random() * 1000)),
+  });
+
+  // Pushing only the name to legend.data
+  chartData.legend.data.push(`Series ${i + 1}`);
+}
+console.log(chartData);
 
 const geoMapData = {
   // Your geo map data structure
