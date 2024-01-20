@@ -5,6 +5,7 @@ import echarts, { EChartsOption, ECharts } from 'echarts';
 interface LineChartProps {
   chartDatamain: any; 
 }
+
 const LineChart: React.FC<LineChartProps> = ({ chartDatamain }) => {
   const chartRef = useRef<EChartsReact>(null);
 
@@ -47,6 +48,13 @@ const LineChart: React.FC<LineChartProps> = ({ chartDatamain }) => {
               ? prevChartData.filter((series) => series.name !== seriesToDelete)
               : []
           );
+        }
+        else{   
+          const initialoptions:any = initialOption.series;
+          const updatedChartData = initialoptions.filter(
+            (series:any) => selectedSeries[series.name] !== false
+          );
+          setChartData(updatedChartData);
         }
              
       });
