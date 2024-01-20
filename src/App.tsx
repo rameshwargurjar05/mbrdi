@@ -127,6 +127,9 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+   localStorage.setItem('chartData' , JSON.stringify(chartData))
+
+
     const retrievedDataString = localStorage.getItem('chartData');
     if (retrievedDataString !== null) {
       const retrievedData = JSON.parse(retrievedDataString);
