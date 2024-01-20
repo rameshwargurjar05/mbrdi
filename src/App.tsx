@@ -125,16 +125,15 @@ const geoMapData = {
 function App() {
   const [chartapidata, setchartapidata] = useState([]);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-   localStorage.setItem('chartData' , JSON.stringify(chartData))
-
-
     const retrievedDataString = localStorage.getItem('chartData');
     if (retrievedDataString !== null) {
       const retrievedData = JSON.parse(retrievedDataString);
       setchartapidata(retrievedData);
       setLoading(false); 
+    }
+    else {
+         localStorage.setItem('chartData' , JSON.stringify(chartData))
     }
   }, []);
 
