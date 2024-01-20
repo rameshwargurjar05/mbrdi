@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import EChartsReact from 'echarts-for-react';
-import echarts, { EChartsOption, ECharts } from 'echarts';
+import echarts, { EChartsOption, ECharts, SeriesOption } from 'echarts';
 
 const LineChart: React.FC = () => {
   const chartRef = useRef<EChartsReact>(null);
@@ -99,11 +99,19 @@ const LineChart: React.FC = () => {
         },
         data: [820, 932, 901, 934, 1290, 1330, 1320]
       }
-    ]
+    ],
+
+    dataZoom: [
+      {
+        type: 'inside',
+        start: 0,
+        end: 100,
+        xAxisIndex: [0], // Zoom on the first xAxis
+      },
+    ],
   };
 
-
-  const [chartData, setChartData] = useState(initialOption.series)
+  const [chartData, setChartData] = useState(initialOption.series);
 
 
   useEffect(() => {
@@ -111,28 +119,49 @@ const LineChart: React.FC = () => {
       const chartInstance: ECharts = chartRef.current.getEchartsInstance();
       chartInstance.setOption(initialOption);
 
-      // Saving as Image
+      // Interpolate line chart value and plot next to the original data
+      chartInstance.on('dataZoom', (event: any) => {
+        // Handle the zoom event, you can use event.start and event.end to get the zoomed range
+        console.log('Zoomed:', event);
+      });
+
+      // Save chart as an image
       const saveAsImageButton = document.getElementById('saveAsImage');
       if (saveAsImageButton) {
         saveAsImageButton.addEventListener('click', () => {
           const link = document.createElement('a');
-          link.download = 'chart.png';          
-          // Use getDataURL directly on the ECharts instance
+          link.download = 'chart.png';
           const dataURL = chartInstance.getDataURL({
             pixelRatio: window.devicePixelRatio || 1,
-            backgroundColor: chartInstance.getOption()?.backgroundColor || '#fff', // Use a default color if getOption() returns null
-          });      
+            backgroundColor: chartInstance.getOption()?.backgroundColor || '#fff',
+          });
           link.href = dataURL;
-          link.click();     
-   
+          link.click();
         });
       }
 
-      chartInstance.on('updated', () => {
-       
+      // If 2 data is dragged to chart then delete one chart by selecting the specific line
+      chartInstance.on('legendselectchanged', (event: any) => {
+        const selectedSeries = event.selected;
+        const seriesToDelete = Object.keys(selectedSeries).find(
+          (seriesName) => selectedSeries[seriesName] === false
+        );
+        if (seriesToDelete) {
+          // Delete the series from the state or take any other action
+          setChartData((prevChartData) =>
+            Array.isArray(prevChartData)
+              ? prevChartData.filter((series) => series.name !== seriesToDelete)
+              : []
+          );
+        }
+        console.log(chartData,'tests');
       });
 
- 
+      // Provide 2 or more crosshairs on chart to mark multiple data points
+      chartInstance.on('crosshairs', (event: any) => {
+        // Handle the crosshair event, event has information about the data points
+        console.log('Crosshair:', event);
+      });
     }
   }, [chartData, initialOption]);
 
