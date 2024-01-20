@@ -37,7 +37,6 @@ const LineChart: React.FC<LineChartProps> = ({ chartDatamain }) => {
       // If 2 data is dragged to chart then delete one chart by selecting the specific line
       chartInstance.on('legendselectchanged', (event: any) => {
         const selectedSeries = event.selected;
-        console.log(selectedSeries,'working')
         const seriesToDelete = Object.keys(selectedSeries).find(
           (seriesName) => selectedSeries[seriesName] === false
         );
@@ -49,7 +48,7 @@ const LineChart: React.FC<LineChartProps> = ({ chartDatamain }) => {
               : []
           );
         }
-        else{   
+        else{
           const initialoptions:any = initialOption.series;
           const updatedChartData = initialoptions.filter(
             (series:any) => selectedSeries[series.name] !== false
